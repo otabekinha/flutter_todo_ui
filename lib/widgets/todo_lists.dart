@@ -10,7 +10,7 @@ class ToDoLists extends StatelessWidget {
 
   final String taskName;
   final bool taskCompleted;
-  final Function(bool?) onChanged;
+  final Function(bool?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,11 @@ class ToDoLists extends StatelessWidget {
             taskName,
             style: TextStyle(
               fontSize: 18,
+              decoration: taskCompleted ? TextDecoration.lineThrough : null,
             ),
           ),
           Checkbox(
+            activeColor: Colors.indigo,
             value: taskCompleted,
             onChanged: onChanged,
           ),

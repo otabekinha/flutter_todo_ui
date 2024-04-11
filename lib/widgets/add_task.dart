@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AddTask extends StatelessWidget {
-  const AddTask({super.key});
+  AddTask({
+    super.key,
+    required this.createNewTask,
+    required this.controller,
+  });
+
+  final Function() createNewTask;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +25,23 @@ class AddTask extends StatelessWidget {
             'Add Task',
             style: TextStyle(
               fontSize: 22,
-              color: Colors.lightBlueAccent,
-              fontWeight: FontWeight.bold,
+              color: Colors.indigo,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 20),
           TextField(
-            decoration: InputDecoration(
+            controller: controller,
+            decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Colors.lightBlueAccent,
+                  color: Colors.indigo,
                   width: 3.0,
                 ), // Change the color here
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: Colors.lightBlueAccent,
+                  color: Colors.indigo,
                   width: 3.0,
                 ), // Change the color here
               ),
@@ -43,14 +51,14 @@ class AddTask extends StatelessWidget {
           const SizedBox(height: 20),
           TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: Colors.lightBlueAccent,
+              backgroundColor: Colors.indigo,
               shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.circular(0), // Adjust the radius as needed
               ),
             ),
-            onPressed: () {},
-            child: Text(
+            onPressed: createNewTask,
+            child: const Text(
               'Add',
               style: TextStyle(
                 color: Colors.white,

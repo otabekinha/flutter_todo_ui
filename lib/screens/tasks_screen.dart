@@ -2,25 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:todoey/widgets/add_task.dart';
 import 'package:todoey/widgets/todo_lists.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+  TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  final _controller = TextEditingController();
+
   List toDoList = [
     ['Buy milk', false],
     ['Buy eggs', false],
     ['Buy banana', false],
   ];
 
+  void checkBoxChanged(int index) {
+    setState(() {
+      toDoList[index][1] = !toDoList[index][1];
+    });
+  }
+
+  void addNewTask() {
+    setState(() {
+      toDoList.add([
+        _controller.text,
+        false,
+        _controller.clear(),
+      ]);
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.indigo,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            builder: (BuildContext context) => AddTask(),
+            builder: (BuildContext context) => AddTask(
+              createNewTask: addNewTask,
+              controller: _controller,
+            ),
           );
         },
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.indigo,
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -44,7 +73,7 @@ class TasksScreen extends StatelessWidget {
                   radius: 30.0,
                   child: Icon(
                     Icons.list,
-                    color: Colors.lightBlueAccent,
+                    color: Colors.indigo,
                     size: 30.0,
                   ),
                 ),
@@ -88,7 +117,7 @@ class TasksScreen extends StatelessWidget {
                   return ToDoLists(
                     taskName: toDoList[index][0],
                     taskCompleted: toDoList[index][1],
-                    onChanged: (p) {},
+                    onChanged: (value) => checkBoxChanged(index),
                   );
                 },
               ),
