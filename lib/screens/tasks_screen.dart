@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/save_task/save_task.dart';
 import 'package:todoey/widgets/add_task.dart';
 import 'package:todoey/widgets/todo_lists.dart';
 
 class TasksScreen extends StatefulWidget {
-  TasksScreen({super.key});
+  const TasksScreen({super.key});
 
   @override
   State<TasksScreen> createState() => _TasksScreenState();
@@ -12,27 +14,12 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final _controller = TextEditingController();
 
-  List toDoList = [
-    ['Buy milk', false],
-    ['Buy eggs', false],
-    ['Buy banana', false],
-  ];
-
-  void checkBoxChanged(int index) {
-    setState(() {
-      toDoList[index][1] = !toDoList[index][1];
-    });
-  }
-
   void addNewTask() {
-    setState(() {
-      toDoList.add([
-        _controller.text,
-        false,
-        _controller.clear(),
-      ]);
-      Navigator.pop(context);
-    });
+    context
+        .read<SaveTask>()
+        .addTask(Task(title: _controller.text, isCompleted: false));
+    _controller.clear();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -43,8 +30,8 @@ class _TasksScreenState extends State<TasksScreen> {
         onPressed: () {
           showModalBottomSheet(
             context: context,
-            builder: (BuildContext context) => AddTask(
-              createNewTask: addNewTask,
+            builder: (BuildContext context) => AddTaskBottomsheetBody(
+              onCreateNewTask: addNewTask,
               controller: _controller,
             ),
           );
@@ -68,7 +55,7 @@ class _TasksScreenState extends State<TasksScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 30.0,
                   child: Icon(
@@ -77,8 +64,8 @@ class _TasksScreenState extends State<TasksScreen> {
                     size: 30.0,
                   ),
                 ),
-                SizedBox(height: 10.0),
-                Text(
+                const SizedBox(height: 10.0),
+                const Text(
                   'Todoey',
                   style: TextStyle(
                     fontSize: 50.0,
@@ -86,13 +73,15 @@ class _TasksScreenState extends State<TasksScreen> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Text(
-                  '12 Tasks',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ),
-                ),
+                Consumer<SaveTask>(builder: (context, task, child) {
+                  return Text(
+                    task.tasksLength.toString(),
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  );
+                }),
               ],
             ),
           ),
@@ -111,16 +100,18 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: ListView.builder(
-                itemCount: toDoList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ToDoLists(
-                    taskName: toDoList[index][0],
-                    taskCompleted: toDoList[index][1],
-                    onChanged: (value) => checkBoxChanged(index),
-                  );
-                },
-              ),
+              child: Consumer<SaveTask>(builder: (context, task, child) {
+                return ListView.builder(
+                  itemCount: task.tasks.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ToDoLists(
+                      taskName: task.tasks[index].title,
+                      taskCompleted: task.tasks[index].isCompleted,
+                      onChanged: (value) {},
+                    );
+                  },
+                );
+              }),
             ),
           ),
         ],

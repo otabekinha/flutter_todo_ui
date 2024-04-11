@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AddTask extends StatelessWidget {
-  AddTask({
+class AddTaskBottomsheetBody extends StatelessWidget {
+  const AddTaskBottomsheetBody({
     super.key,
-    required this.createNewTask,
+    required this.onCreateNewTask,
     required this.controller,
   });
 
-  final Function() createNewTask;
+  final VoidCallback onCreateNewTask;
   final TextEditingController controller;
 
   @override
@@ -57,7 +57,7 @@ class AddTask extends StatelessWidget {
                     BorderRadius.circular(0), // Adjust the radius as needed
               ),
             ),
-            onPressed: createNewTask,
+            onPressed: onCreateNewTask,
             child: const Text(
               'Add',
               style: TextStyle(
