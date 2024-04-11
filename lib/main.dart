@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/save_task/save_task.dart';
 import 'package:todoey/screens/tasks_screen.dart';
 
 void main() {
@@ -12,7 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TasksScreen(),
+      home: ChangeNotifierProvider(
+          create: (context) => SaveTask(), child: const TasksScreen()),
     );
   }
 }
